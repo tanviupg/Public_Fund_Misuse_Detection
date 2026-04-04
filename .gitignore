@@ -1,0 +1,10 @@
+# Root ignores
+node_modules/
+**/node_modules/
+__pycache__/
+**/__pycache__/
+*.pyc
+*.db
+.env
+.env.*
+.DS_Store

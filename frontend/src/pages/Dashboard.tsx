@@ -68,7 +68,7 @@ export default function Dashboard() {
   const { user } = useAuth();
   const [threshold, setThreshold] = useState([75]);
   const [selectedTxnId, setSelectedTxnId] = useState<number | null>(null);
-  const [modelInfo, setModelInfo] = useState<{ version?: string | null; accuracy?: number | null; last_trained?: string | null } | null>(null);
+  const [modelInfo, setModelInfo] = useState<{ version?: string | null; accuracy?: number | null; last_trained?: string | null; model_loaded?: boolean } | null>(null);
   const [reporting, setReporting] = useState(false);
 
   const quickFilters = useMemo(() => buildQuickFilters(), []);
@@ -348,16 +348,26 @@ export default function Dashboard() {
           <h3 className="font-semibold mb-4">Model Info</h3>
           <div className="space-y-4">
             <div className="flex items-center justify-between">
+              <p className="text-sm text-muted-foreground">Model Type</p>
+              <Badge variant="secondary">Random Forest</Badge>
+            </div>
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-muted-foreground">Detection Logic</p>
+              <p className="font-semibold">ML + Rule Override</p>
+            </div>
+            <div className="flex items-center justify-between">
               <p className="text-sm text-muted-foreground">Model Version</p>
               <Badge variant="outline">{modelInfo?.version || "N/A"}</Badge>
             </div>
             <div className="flex items-center justify-between">
-              <p className="text-sm text-muted-foreground">Accuracy</p>
-              <p className="font-semibold">{modelInfo?.accuracy != null ? `${modelInfo.accuracy}%` : "N/A"}</p>
-            </div>
-            <div className="flex items-center justify-between">
               <p className="text-sm text-muted-foreground">Last Trained</p>
               <p className="font-semibold">{modelInfo?.last_trained ? modelInfo.last_trained.slice(0, 10) : "N/A"}</p>
+            </div>
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-muted-foreground">Model Loaded</p>
+              <Badge variant={modelInfo?.model_loaded ? "secondary" : "destructive"}>
+                {modelInfo?.model_loaded ? "Yes" : "No"}
+              </Badge>
             </div>
             <div className="flex items-center justify-between">
               <p className="text-sm text-muted-foreground">Active Alerts</p>

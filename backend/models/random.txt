@@ -1,0 +1,33 @@
+=== MODEL SUMMARY ===
+Type: <class 'sklearn.ensemble._forest.RandomForestClassifier'>
+n_estimators: 200
+n_features_in: 5
+classes: [0, 1]
+
+=== PARAMS ===
+{'bootstrap': True,
+ 'ccp_alpha': 0.0,
+ 'class_weight': None,
+ 'criterion': 'gini',
+ 'max_depth': 10,
+ 'max_features': 'sqrt',
+ 'max_leaf_nodes': None,
+ 'max_samples': None,
+ 'min_impurity_decrease': 0.0,
+ 'min_samples_leaf': 1,
+ 'min_samples_split': 2,
+ 'min_weight_fraction_leaf': 0.0,
+ 'monotonic_cst': None,
+ 'n_estimators': 200,
+ 'n_jobs': None,
+ 'oob_score': False,
+ 'random_state': 42,
+ 'verbose': 0,
+ 'warm_start': False}
+
+=== FEATURE IMPORTANCES ===
+[0.050253650620519966,
+ 0.08493554144348249,
+ 0.054813011754751326,
+ 0.39333915241530965,
+ 0.4166586437659365]

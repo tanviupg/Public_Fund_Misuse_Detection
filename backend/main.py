@@ -15,9 +15,7 @@ from utils import preprocess
 
 app = FastAPI()
 
-# -------------------------------
-# CORS (IMPORTANT)
-# -------------------------------
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -26,15 +24,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# -------------------------------
+
 # Load model
-# -------------------------------
 MODEL_PATH = os.path.join(os.path.dirname(__file__), "models", "random_forest.pkl")
 rf_model = joblib.load(MODEL_PATH)
 
-# -------------------------------
-# SQLite DB (Local Persistence)
-# -------------------------------
+
+# SQLite DB
 DB_PATH = os.path.join(os.path.dirname(__file__), "data", "app.db")
 
 
@@ -411,9 +407,7 @@ def _build_explanation(allocated_amount, spent_amount, work_status, pred):
     return explanation
 
 
-# -------------------------------
 # Predict (Manual Input)
-# -------------------------------
 @app.post("/predict")
 def predict(data: dict, user=Depends(_get_current_user)):
     try:
@@ -448,9 +442,8 @@ def predict(data: dict, user=Depends(_get_current_user)):
         pred = rf_model.predict(X)[0]
         prob = rf_model.predict_proba(X)[0][1] * 100
 
-        # -------------------------------
+        
         # RULE-BASED OVERRIDE
-        # -------------------------------
         override_pred, prob, override_triggered = _apply_override(
             allocated_amount,
             spent_amount,
@@ -466,9 +459,9 @@ def predict(data: dict, user=Depends(_get_current_user)):
         # Final label
         result = "Fraud" if pred == 1 else "Normal"
 
-        # -------------------------------
-        # EXPLANATION LOGIC (ALIGNED)
-        # -------------------------------
+        
+        # EXPLANATION LOGIC 
+        
         explanation = _build_explanation(
             allocated_amount,
             spent_amount,
@@ -502,9 +495,9 @@ def predict(data: dict, user=Depends(_get_current_user)):
         return {"error": str(e)}
 
 
-# -------------------------------
+
 # CSV Upload
-# -------------------------------
+
 @app.post("/upload")
 def upload(file: UploadFile = File(...), user=Depends(_get_current_user)):
     try:
@@ -530,15 +523,16 @@ def upload(file: UploadFile = File(...), user=Depends(_get_current_user)):
         preds = rf_model.predict(X)
         probs = rf_model.predict_proba(X)[:, 1] * 100
 
-        # -------------------------------
+        
         # APPLY RULE OVERRIDE ON CSV
-        # -------------------------------
+        
         override_flags = []
         for i in range(len(df)):
             allocated_amount = float(df.loc[i, "allocated_amount"])
             spent_amount = float(df.loc[i, "spent_amount"])
             work_status = str(df.loc[i, "work_status"]).strip()
 
+            #rule-based approach
             override_pred, prob, override_triggered = _apply_override(
                 allocated_amount,
                 spent_amount,
@@ -591,9 +585,8 @@ def upload(file: UploadFile = File(...), user=Depends(_get_current_user)):
         return {"error": str(e)}
 
 
-# -------------------------------
-# History (Persisted)
-# -------------------------------
+
+# History 
 @app.get("/history")
 def history(
     limit: int = 100,
